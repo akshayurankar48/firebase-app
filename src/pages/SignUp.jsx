@@ -6,8 +6,13 @@ import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 
 const SignUp = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+
+  const initialValues = {
+    email: "",
+    password: ""
+  }
+
+  const [formState, setFormState] = useState(initialValues)
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const navigate = useNavigate("");
@@ -15,7 +20,7 @@ const SignUp = () => {
   const signUp = (e) => {
     e.preventDefault();
 
-    createUserWithEmailAndPassword(auth, email, password)
+    createUserWithEmailAndPassword(auth, formState.email, formState.password)
       .then((userCredential) => {
         setIsLoading(true);
         toast.success("Registration Successful!");
@@ -35,6 +40,11 @@ const SignUp = () => {
 
   console.log({ isError });
   console.log({ isLoading });
+
+  
+  const handleChange = (e) => {
+    setFormState({ ...formState, [e.target.name]: e.target.value });
+  };
 
   return (
     <>
@@ -58,8 +68,9 @@ const SignUp = () => {
               <input
                 type="email"
                 placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={formState.email}
+                onChange={handleChange}
+                name="email"
                 className="input-field"
               ></input>
             </div>
@@ -67,9 +78,11 @@ const SignUp = () => {
             <div className="input-control">
               <input
                 type="password"
+                name="password"
+
                 placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={formState.password}
+                onChange={handleChange}
                 className="input-field"
               ></input>
             </div>
