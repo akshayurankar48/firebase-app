@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./index.css";
 import { auth, app } from "../firebase";
 import { createUserWithEmailAndPassword  } from "firebase/auth";
-import Navigation from "../components/Navigation";
+
 import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {

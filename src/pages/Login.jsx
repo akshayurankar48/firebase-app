@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Navigation from "../components/Navigation";
 import "./index.css";
 import { auth, app } from "../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
