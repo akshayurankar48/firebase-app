@@ -3,12 +3,13 @@ import "./index.css";
 import { auth } from "../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,12 +24,15 @@ const Login = () => {
 
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        setIsLoading(false);
-        navigate("/home");
         toast.success("Successfully signed in!");
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
+        setIsLoading(false);
         console.log(userCredential);
       })
       .catch((error) => {
+        setIsError(error.message);
         setIsLoading(false);
         toast.error(error.message);
       });
@@ -82,8 +86,10 @@ const Login = () => {
               {isLoading ? "Loading..." : "Sign In"}
             </button>
           </form>
+          {isError && <p className="text text-error">{isError}</p>}
         </section>
       </div>
+      <Toaster position="top-right" />
     </>
   );
 };

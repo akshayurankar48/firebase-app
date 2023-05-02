@@ -3,30 +3,38 @@ import "./index.css";
 import { auth } from "../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
   const navigate = useNavigate("");
 
   const signUp = (e) => {
     e.preventDefault();
-    setIsLoading(true);
+
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        navigate("/");
+        setIsLoading(true);
+        toast.success("Registration Successful!");
+        setTimeout(() => {
+          navigate("/login");
+        }, 1000);
         console.log(userCredential);
         setIsLoading(false);
-        toast.success("Registration Successful!");
       })
       .catch((error) => {
         console.log(error);
+        setIsError(error.message);
         setIsLoading(false);
         toast.error(error.message);
       });
   };
+
+  console.log({ isError });
+  console.log({ isLoading });
 
   return (
     <>
@@ -75,10 +83,13 @@ const SignUp = () => {
               {isLoading ? "Loading..." : "Submit"}
             </button>
           </form>
+          {isError && <p className="text text-error">{isError}</p>}
         </section>
       </div>
+      <Toaster position="top-right" />
     </>
   );
 };
 
 export default SignUp;
+
