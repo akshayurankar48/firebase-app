@@ -25,7 +25,7 @@ const Login = () => {
 
   return (
     <>
-      <Navigation />
+      {/* <Navigation /> */}
       <div className="container-signin">
         <section className="wrapper">
           <div className="heading">
