@@ -1,30 +1,41 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./index.css";
-import { auth, app } from "../firebase";
+import { auth } from "../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate('')
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // reset error message on email or password change
+    setEmail("");
+    setPassword("");
+  }, []);
 
   const signIn = (e) => {
-    e.preventDefault()
+    e.preventDefault();
+    setIsLoading(true);
+
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        navigate("/home")
-        console.log(userCredential)
-        // ...
+        setIsLoading(false);
+        navigate("/home");
+        toast.success("Successfully signed in!");
+        console.log(userCredential);
       })
       .catch((error) => {
-        console.log(error)
+        setIsLoading(false);
+        toast.error(error.message);
       });
   };
 
   return (
     <>
-      {/* <Navigation /> */}
       <div className="container-signin">
         <section className="wrapper">
           <div className="heading">
@@ -66,8 +77,9 @@ const Login = () => {
               name="submit"
               className="input-submit"
               value="Sign In"
+              disabled={isLoading}
             >
-              Sign In
+              {isLoading ? "Loading..." : "Sign In"}
             </button>
           </form>
         </section>

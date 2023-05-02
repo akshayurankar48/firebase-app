@@ -1,31 +1,35 @@
 import React, { useState } from "react";
 import "./index.css";
-import { auth, app } from "../firebase";
-import { createUserWithEmailAndPassword  } from "firebase/auth";
-
+import { auth } from "../firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate('')
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate("");
 
   const signUp = (e) => {
     e.preventDefault();
-    createUserWithEmailAndPassword (auth, email, password)
+    setIsLoading(true);
+    createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        navigate("/")
+        navigate("/");
         console.log(userCredential);
-        // ...
+        setIsLoading(false);
+        toast.success("Registration Successful!");
       })
       .catch((error) => {
         console.log(error);
+        setIsLoading(false);
+        toast.error(error.message);
       });
   };
 
   return (
     <>
-      {/* <Navigation /> */}
       <div className="container-signin">
         <section className="wrapper">
           <div className="heading">
@@ -33,7 +37,7 @@ const SignUp = () => {
               <strong>Register</strong>
             </h1>
             <p className="text text-normal">
-            Already a user? 
+              Already a user?
               <span>
                 <a href="/" className="text text-links">
                   Log In
@@ -68,7 +72,7 @@ const SignUp = () => {
               className="input-submit"
               value="Sign In"
             >
-             Submit
+              {isLoading ? "Loading..." : "Submit"}
             </button>
           </form>
         </section>
